@@ -131,7 +131,7 @@ export function BookingWizard({
           hold ? (
             <div className="flex flex-wrap items-center justify-between gap-4 border border-ink-600 p-5">
               <p className="text-bone">
-                <span className="capitalize">{formatLocalDate(hold.date)}</span>, às <strong>{hold.label}</strong>
+                <span className="inline-block first-letter:uppercase">{formatLocalDate(hold.date)}</span>, às <strong>{hold.label}</strong>
               </p>
               <button type="button" onClick={changeSlot} className="text-sm text-bone-dim underline underline-offset-4 hover:text-bone">
                 Trocar horário

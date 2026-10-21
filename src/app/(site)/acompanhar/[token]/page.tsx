@@ -83,7 +83,7 @@ async function Content({ params, searchParams }: Props) {
                 <Badge tone={TONE[appt.status]}>{isRequest ? "Pedido de reagendamento — aguardando aprovação" : APPOINTMENT_STATUS_LABEL[appt.status]}</Badge>
                 {appt.protocol !== view.root.protocol ? <span className="text-xs text-faint">{appt.protocol}</span> : null}
               </div>
-              <p className="display mt-6 text-3xl capitalize sm:text-4xl">{formatDateLong(appt.startsAt, tz)}</p>
+              <p className="display mt-6 text-3xl first-letter:uppercase sm:text-4xl">{formatDateLong(appt.startsAt, tz)}</p>
               <p className="mt-1 text-lg text-bone-dim">
                 {formatTime(appt.startsAt, tz)} – {formatTime(appt.endsAt, tz)} · {service.name}
               </p>

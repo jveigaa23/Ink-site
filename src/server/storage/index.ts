@@ -76,7 +76,7 @@ export async function getPrivateObject(key: string): Promise<{ body: ReadableStr
 }
 
 export async function readLocalPublic(key: string): Promise<Buffer | null> {
-  if (env.isProd) return null;
+  if (env.isProd && process.env.ALLOW_LOCAL_STORAGE !== "1") return null;
   try {
     return await readFile(safeLocalPath("public", key));
   } catch {

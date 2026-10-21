@@ -1,4 +1,5 @@
 import { TZDate } from "@date-fns/tz";
+import { AppError } from "./errors";
 
 /**
  * Utilitários de data/hora. Todos os instantes são armazenados em UTC (timestamptz);
@@ -123,4 +124,19 @@ export function formatDateTime(instant: Date, timeZone: string) {
 export function formatLocalDate(date: LocalDate, opts: Intl.DateTimeFormatOptions = { weekday: "long", day: "numeric", month: "long" }) {
   const { y, m, d } = parts(date);
   return new Intl.DateTimeFormat("pt-BR", { timeZone: "UTC", ...opts }).format(new Date(Date.UTC(y, m - 1, d, 12)));
+}
+
+/** Converte "YYYY-MM-DDTHH:mm" (horário local do estúdio, ex.: input datetime-local) em instante UTC. */
+export function parseLocalDateTime(value: string, timeZone: string): Date {
+  const [date, time] = value.split("T");
+  const minutes = time ? hhmmToMinutes(time.slice(0, 5)) : null;
+  if (!date || !isValidLocalDate(date) || minutes == null) {
+    throw new AppError("INVALID", "Data/hora inválida.", 400, { startsAt: "Data/hora inválida." });
+  }
+  return zonedToUtc(date, minutes, timeZone);
+}
+
+/** Formata um instante como valor de input datetime-local no fuso indicado. */
+export function toLocalDateTimeInput(instant: Date, timeZone: string): string {
+  return `${toLocalDate(instant, timeZone)}T${minutesToHHMM(localMinuteOfDay(instant, timeZone))}`;
 }

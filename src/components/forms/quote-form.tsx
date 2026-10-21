@@ -52,10 +52,16 @@ export function QuoteForm({ styles }: { styles: string[] }) {
       return;
     }
     setClientErrors(null);
+    // lê do próprio campo (não do estado), cobrindo seleção feita antes da hidratação
+    const chosen = fd.getAll("references").filter((f): f is File => f instanceof File && f.size > 0 && f.type.startsWith("image/"));
+    if (chosen.length > MAX_FILES) {
+      setFileError(`Selecione no máximo ${MAX_FILES} imagens.`);
+      return;
+    }
     fd.delete("references");
     setPreparing(true);
     try {
-      for (const f of files) fd.append("references", await compressImage(f));
+      for (const f of chosen) fd.append("references", await compressImage(f));
     } finally {
       setPreparing(false);
     }

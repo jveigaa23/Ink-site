@@ -1,6 +1,16 @@
 "use client";
 
-import { useId, type ComponentProps, type ReactNode } from "react";
+import { createContext, useContext, useId, type ComponentProps, type ReactNode } from "react";
+
+/** Erros de validação do servidor por nome de campo, fornecidos pelo formulário. */
+export const FormErrorsContext = createContext<Record<string, string> | undefined>(undefined);
+
+function useFieldError(name: string | undefined, explicit?: string) {
+  const ctx = useContext(FormErrorsContext);
+  if (explicit) return explicit;
+  if (!name || !ctx) return undefined;
+  return ctx[name] ?? ctx[`contact.${name}`];
+}
 
 /**
  * Campos de formulário acessíveis: rótulo associado, dica e mensagem de erro
@@ -47,7 +57,8 @@ function describedBy(id: string, hint?: ReactNode, error?: string) {
   return [hint ? `${id}-hint` : "", error ? `${id}-error` : ""].filter(Boolean).join(" ") || undefined;
 }
 
-export function TextField({ label, hint, error, required, className, ...props }: FieldProps & ComponentProps<"input">) {
+export function TextField({ label, hint, error: explicitError, required, className, ...props }: FieldProps & ComponentProps<"input">) {
+  const error = useFieldError(props.name, explicitError);
   const auto = useId();
   const id = props.id ?? auto;
   return (
@@ -64,7 +75,8 @@ export function TextField({ label, hint, error, required, className, ...props }:
   );
 }
 
-export function TextArea({ label, hint, error, required, className, ...props }: FieldProps & ComponentProps<"textarea">) {
+export function TextArea({ label, hint, error: explicitError, required, className, ...props }: FieldProps & ComponentProps<"textarea">) {
+  const error = useFieldError(props.name, explicitError);
   const auto = useId();
   const id = props.id ?? auto;
   return (
@@ -85,12 +97,13 @@ export function TextArea({ label, hint, error, required, className, ...props }: 
 export function SelectField({
   label,
   hint,
-  error,
+  error: explicitError,
   required,
   className,
   children,
   ...props
 }: FieldProps & ComponentProps<"select">) {
+  const error = useFieldError(props.name, explicitError);
   const auto = useId();
   const id = props.id ?? auto;
   return (
@@ -111,11 +124,12 @@ export function SelectField({
 
 export function CheckboxField({
   label,
-  error,
+  error: explicitError,
   hint,
   className = "",
   ...props
 }: { label: ReactNode; error?: string; hint?: ReactNode; className?: string } & ComponentProps<"input">) {
+  const error = useFieldError(props.name, explicitError);
   const auto = useId();
   const id = props.id ?? auto;
   return (

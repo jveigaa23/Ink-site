@@ -126,3 +126,28 @@ export async function anonymizeClient(db: DbLike, id: string, actor: Actor, now 
   });
   await Promise.allSettled(keys.map((k) => deleteObject(k, "private")));
 }
+
+/**
+ * Retenção: anonimiza clientes sem pedidos, agendamentos ou alterações desde `cutoff`
+ * e sem agendamentos futuros. Executado pela rotina diária.
+ */
+export async function anonymizeInactiveClients(db: DbLike, cutoff: Date, now = new Date()) {
+  const rows = await db.execute<{ id: string }>(sql`
+    select c.id from clients c
+    where c.anonymized_at is null
+      and c.updated_at < ${cutoff.toISOString()}::timestamptz
+      and not exists (select 1 from appointments a where a.client_id = c.id
+                      and (a.updated_at >= ${cutoff.toISOString()}::timestamptz or a.starts_at > ${now.toISOString()}::timestamptz))
+      and not exists (select 1 from quote_requests q where q.client_id = c.id and q.updated_at >= ${cutoff.toISOString()}::timestamptz)
+    limit 100`);
+  let count = 0;
+  for (const r of Array.from(rows)) {
+    try {
+      await anonymizeClient(db, r.id, { type: "system" }, now);
+      count++;
+    } catch (e) {
+      console.error("[retention] falha ao anonimizar cliente:", e instanceof Error ? e.message : e);
+    }
+  }
+  return count;
+}

@@ -80,7 +80,7 @@ async function Content({ params, searchParams }: Props) {
             <ul className="space-y-1 text-bone-dim">
               {q.proposedSlots.map((s) => (
                 <li key={s.startsAt}>
-                  <span className="capitalize">{formatDateLong(new Date(s.startsAt), tz)}</span>, {formatTime(new Date(s.startsAt), tz)}
+                  <span className="inline-block first-letter:uppercase">{formatDateLong(new Date(s.startsAt), tz)}</span>, {formatTime(new Date(s.startsAt), tz)}
                   {s.note ? <span className="text-faint"> — {s.note}</span> : null}
                 </li>
               ))}
@@ -91,7 +91,7 @@ async function Content({ params, searchParams }: Props) {
         {view.appointment ? (
           <div className="mt-8 border-t border-ink-700 pt-6">
             <h2 className="eyebrow mb-2">Sessão agendada</h2>
-            <p className="text-lg capitalize text-bone">{formatDateLong(view.appointment.appt.startsAt, tz)}, {formatTime(view.appointment.appt.startsAt, tz)}</p>
+            <p className="text-lg first-letter:uppercase text-bone">{formatDateLong(view.appointment.appt.startsAt, tz)}, {formatTime(view.appointment.appt.startsAt, tz)}</p>
             <p className="text-sm text-mute">
               {view.appointment.serviceName} · {APPOINTMENT_STATUS_LABEL[view.appointment.appt.status]}
             </p>

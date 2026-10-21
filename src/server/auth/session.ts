@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { getDb } from "@/db/client";
 import { env } from "@/server/env";
 import { SESSION_TTL_MS, validateSession, type AdminIdentity } from "./core";
@@ -29,6 +30,8 @@ export async function readSessionToken() {
 
 /** Identidade do administrador da requisição atual (deduplicada por renderização). */
 export const getAdmin = cache(async (): Promise<AdminIdentity | null> => {
+  // a validação depende do relógio e do banco: sempre em tempo de requisição, nunca pré-renderizada
+  await connection();
   return validateSession(getDb(), await readSessionToken());
 });
 
