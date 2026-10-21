@@ -173,17 +173,21 @@ export async function removeSiteImageAction(fd: FormData) {
   const admin = await requireAdmin();
   const slot = z.enum(IMAGE_SLOTS).parse(fd.get("slot"));
   const key = z.string().max(300).parse(fd.get("key"));
+  let referenced = false;
   await saveStudio(
-    (c) =>
-      slot === "studioPhotos"
-        ? { ...c, studioPhotos: c.studioPhotos.filter((p) => p.key !== key) }
-        : c[slot]?.key === key
-          ? { ...c, [slot]: null }
-          : c,
+    (c) => {
+      if (slot === "studioPhotos") {
+        referenced = c.studioPhotos.some((p) => p.key === key);
+        return { ...c, studioPhotos: c.studioPhotos.filter((p) => p.key !== key) };
+      }
+      referenced = c[slot]?.key === key;
+      return referenced ? { ...c, [slot]: null } : c;
+    },
     admin.id,
     `image:${slot}:remove`,
   );
-  await deleteObject(key, "public").catch(() => {});
+  // só remove do armazenamento arquivos que pertenciam às configurações
+  if (referenced) await deleteObject(key, "public").catch(() => {});
 }
 
 export async function saveBookingRulesAction(_p: ActionState, fd: FormData): Promise<ActionState> {
