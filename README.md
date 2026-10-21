@@ -1,4 +1,4 @@
-# Plataforma do estúdio de tatuagem
+# Ink Site — demonstração de plataforma para estúdio de tatuagem
 
 Site público premium (portfólio, estúdio, serviços, orçamento e **agendamento com disponibilidade real**) e painel administrativo próprio (agenda, orçamentos, clientes, portfólio, serviços, notificações e configurações), sobre um único banco PostgreSQL.
 

@@ -1,5 +1,12 @@
 # Custos e limites (verificados em outubro/2026)
 
+## Cenário atual: demonstração "Ink Site" (uso pessoal, não comercial)
+Projeto de demonstração na Vercel no plano **Hobby** (gratuito), somente para uso pessoal e não comercial, com dados demonstrativos. Custo: US$ 0 nos serviços abaixo, dentro dos limites gratuitos. Não divulgue a demo como site de um estúdio real nem a use para atender clientes.
+
+## Cenário futuro: site do estúdio real
+Requer o plano **Pro** da Vercel (uso comercial) e os demais serviços da tabela abaixo.
+
+
 > Preços mudam. Confirme nas páginas oficiais antes de contratar. Valores em USD.
 
 | Serviço | Plano sugerido | Custo | Limites relevantes | Ao atingir o limite |

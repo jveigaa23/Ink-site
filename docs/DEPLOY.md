@@ -1,6 +1,8 @@
 # Publicação na Vercel
 
-> Uso comercial exige o plano **Pro** da Vercel (o Hobby é restrito a uso pessoal/não comercial). Veja [CUSTOS.md](CUSTOS.md).
+> Para a **demonstração "Ink Site"** (uso pessoal), o plano **Hobby** é suficiente. Para o site de um estúdio real, uso comercial exige o plano **Pro**. Veja [CUSTOS.md](CUSTOS.md).
+>
+> Nome sugerido do projeto na Vercel: `ink-site` (a Vercel exige letras minúsculas e hífens).
 
 ## 1. Repositório
 Envie este projeto para um repositório Git (GitHub/GitLab/Bitbucket). O `.gitignore` já exclui `.env*` (exceto `.env.example`) e `.data/`.
