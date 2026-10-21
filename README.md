@@ -16,6 +16,8 @@ Site público premium (portfólio, estúdio, serviços, orçamento e **agendamen
 | Validação | Zod (mesmos esquemas no navegador e no servidor) |
 | Testes | Vitest (unitários + integração com PostgreSQL real) e Playwright (E2E) |
 
+> **Demo publicada:** https://ink-site-seven.vercel.app (Vercel Hobby, uso pessoal/não comercial; Neon e Vercel Blob em São Paulo). Conteúdo e imagens são demonstrativos.
+
 Detalhes: [docs/ARQUITETURA.md](docs/ARQUITETURA.md) · Publicação: [docs/DEPLOY.md](docs/DEPLOY.md) · Custos: [docs/CUSTOS.md](docs/CUSTOS.md) · Operação, backup e LGPD: [docs/OPERACAO.md](docs/OPERACAO.md)
 
 ## Executar localmente
