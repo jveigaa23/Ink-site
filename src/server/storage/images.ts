@@ -25,7 +25,7 @@ export async function processImage(file: File, opts: { maxDimension?: number } =
   if (file.size > MAX_UPLOAD_BYTES) throw new AppError("FILE_TOO_LARGE", "Imagem acima de 4 MB.");
 
   const input = Buffer.from(await file.arrayBuffer());
-  let meta: sharp.Metadata;
+  let meta: Awaited<ReturnType<ReturnType<typeof sharp>["metadata"]>>;
   try {
     meta = await sharp(input, { limitInputPixels: 40_000_000 }).metadata();
   } catch {

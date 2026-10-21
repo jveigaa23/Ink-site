@@ -19,7 +19,7 @@ function tokenFor(v: Visibility) {
   return v === "public" ? env.blobPublicToken() : env.blobPrivateToken();
 }
 
-function useLocal(v: Visibility) {
+function isLocalDriver(v: Visibility) {
   if (tokenFor(v)) return false;
   if (env.isProd && process.env.ALLOW_LOCAL_STORAGE !== "1") {
     throw new AppError(
@@ -45,7 +45,7 @@ export async function putObject(
   contentType: string,
   visibility: Visibility,
 ): Promise<{ key: string; url: string }> {
-  if (useLocal(visibility)) {
+  if (isLocalDriver(visibility)) {
     const file = safeLocalPath(visibility, key);
     await mkdir(path.dirname(file), { recursive: true });
     await writeFile(file, body);
@@ -63,7 +63,7 @@ export async function putObject(
 }
 
 export async function getPrivateObject(key: string): Promise<{ body: ReadableStream | Buffer; contentType: string } | null> {
-  if (useLocal("private")) {
+  if (isLocalDriver("private")) {
     try {
       return { body: await readFile(safeLocalPath("private", key)), contentType: "image/webp" };
     } catch {
@@ -85,7 +85,7 @@ export async function readLocalPublic(key: string): Promise<Buffer | null> {
 }
 
 export async function deleteObject(keyOrUrl: string, visibility: Visibility) {
-  if (useLocal(visibility)) {
+  if (isLocalDriver(visibility)) {
     await rm(safeLocalPath(visibility, keyOrUrl), { force: true });
     return;
   }

@@ -1,5 +1,5 @@
 import "server-only";
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 import { createDb } from "./create";
