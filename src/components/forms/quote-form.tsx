@@ -12,7 +12,7 @@ import { ContactFields } from "./contact-fields";
 
 const MAX_FILES = 3;
 
-export function QuoteForm({ styles }: { styles: string[] }) {
+export function QuoteForm({ styles, referencesEnabled }: { styles: string[]; referencesEnabled: boolean }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(submitQuoteAction, idle);
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState("");
@@ -129,6 +129,7 @@ export function QuoteForm({ styles }: { styles: string[] }) {
           className="sm:col-span-2"
         />
 
+        {referencesEnabled ? (
         <div className="sm:col-span-2">
           <label htmlFor="references" className="text-sm font-medium text-bone-dim">
             Referências visuais (opcional)
@@ -162,6 +163,7 @@ export function QuoteForm({ styles }: { styles: string[] }) {
             </ul>
           ) : null}
         </div>
+        ) : null}
 
         <TextArea label="Informações adicionais (opcional)" name="extraInfo" rows={3} maxLength={1500} error={errors?.extraInfo} className="sm:col-span-2" />
       </fieldset>

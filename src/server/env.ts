@@ -29,3 +29,7 @@ export const env = {
 };
 
 export const emailProviderConfigured = () => Boolean(env.resendApiKey() && env.emailFrom());
+
+/** Referências de clientes exigem armazenamento privado (ou disco local fora de produção). */
+export const privateStorageAvailable = () =>
+  Boolean(env.blobPrivateToken()) || !env.isProd || process.env.ALLOW_LOCAL_STORAGE === "1";

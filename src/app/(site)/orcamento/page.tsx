@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getPublicPortfolio, getPublicStudio } from "@/server/public-data";
 import { Container, SectionHeading } from "@/components/site/section";
 import { QuoteForm } from "@/components/forms/quote-form";
+import { privateStorageAvailable } from "@/server/env";
 
 export const metadata: Metadata = {
   title: "Solicitar orçamento",
@@ -18,7 +19,7 @@ export default async function QuotePage() {
         <p>Quanto mais detalhes, melhor a avaliação. O retorno acontece pelo contato que você informar.</p>
       </SectionHeading>
       <div className="mt-16 md:ml-[25%] md:max-w-3xl">
-        <QuoteForm styles={styles} />
+        <QuoteForm styles={styles} referencesEnabled={privateStorageAvailable()} />
       </div>
     </Container>
   );

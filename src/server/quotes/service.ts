@@ -18,6 +18,7 @@ import { adminCreateAppointment } from "@/server/booking/service";
 import { upsertClientFromContact } from "@/server/clients";
 import { deleteObject, putObject } from "@/server/storage";
 import { processImage, safeObjectKey } from "@/server/storage/images";
+import { privateStorageAvailable } from "@/server/env";
 
 export const MAX_REFERENCES = 3;
 
@@ -31,6 +32,13 @@ export async function createQuote(
 ) {
   const now = params.now ?? new Date();
   const files = params.files.filter((f) => f.size > 0);
+  if (files.length && !privateStorageAvailable()) {
+    throw new AppError(
+      "REFERENCES_DISABLED",
+      "O envio de imagens de referência está indisponível no momento. Envie o pedido sem imagens.",
+      503,
+    );
+  }
   if (files.length > MAX_REFERENCES) {
     throw new AppError("TOO_MANY_FILES", `Envie no máximo ${MAX_REFERENCES} imagens de referência.`);
   }
