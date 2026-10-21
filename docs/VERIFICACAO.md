@@ -30,3 +30,5 @@
 - Envio real de e-mails (sem `RESEND_API_KEY`).
 - Navegadores Safari/Firefox e dispositivos físicos (testado em Chromium desktop e emulação Pixel 7).
 - LCP no celular simulado ficou em 2,5–3,0 s (meta “bom”: ≤ 2,5 s); reavaliar com fotos reais e CDN da Vercel.
+
+<!-- teste de deploy automático -->
