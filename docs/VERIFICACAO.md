@@ -34,3 +34,4 @@
 
 
 > Deploy automático via Git ativo (testado em outubro/2026).
+<!-- teste 5 -->
