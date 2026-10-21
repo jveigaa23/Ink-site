@@ -32,5 +32,5 @@
 - LCP no celular simulado ficou em 2,5–3,0 s (meta “bom”: ≤ 2,5 s); reavaliar com fotos reais e CDN da Vercel.
 
 
-<!-- deploy automático via Git ativo -->
-<!-- teste 3 -->
+
+> Deploy automático via Git ativo (testado em outubro/2026).
