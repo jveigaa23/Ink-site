@@ -73,7 +73,7 @@ export default async function HomePage() {
             )}
           </div>
         </Container>
-        <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-1/3 size-[520px] rounded-full bg-accent/10 blur-[140px]" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-60 top-1/4 size-[720px] bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--accent)_14%,transparent),transparent)]" />
       </section>
 
       {/* --------------------------- Trabalhos --------------------------- */}

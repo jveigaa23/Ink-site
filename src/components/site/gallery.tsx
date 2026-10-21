@@ -67,7 +67,7 @@ export function Gallery({ items, categories }: { items: PublicWork[]; categories
                 type="button"
                 onClick={() => setOpenIndex(i)}
                 className="group relative block w-full overflow-hidden bg-ink-850 text-left"
-                aria-label={`Ampliar: ${w.title}`}
+                aria-label={`${w.isDemo ? "Imagem demonstrativa. " : ""}Ampliar: ${w.title}`}
               >
                 {w.isDemo ? <DemoTag /> : null}
                 <Image

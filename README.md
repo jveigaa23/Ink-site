@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Plataforma do estúdio de tatuagem
 
-## Getting Started
+Site público premium (portfólio, estúdio, serviços, orçamento e **agendamento com disponibilidade real**) e painel administrativo próprio (agenda, orçamentos, clientes, portfólio, serviços, notificações e configurações), sobre um único banco PostgreSQL.
 
-First, run the development server:
+> O nome comercial, contatos, textos e cores ficam **todos no painel** (`/admin/configuracoes`), com padrões neutros em [`src/config/settings-schema.ts`](src/config/settings-schema.ts). Nenhuma informação do estúdio foi inventada: campos vazios simplesmente não aparecem no site.
+
+## Stack
+
+| Camada | Escolha |
+| --- | --- |
+| Framework | Next.js 16 (App Router, Cache Components, Server Actions), React 19, TypeScript estrito |
+| Estilo | Tailwind CSS v4 com design tokens em [`src/app/globals.css`](src/app/globals.css) |
+| Banco | PostgreSQL (Neon em produção) via Drizzle ORM + migrações SQL versionadas em [`drizzle/`](drizzle) |
+| Imagens | Vercel Blob (store público + store privado), processadas com `sharp` |
+| E-mail | Resend (API HTTP), opcional — sem ele, envio manual pelo painel |
+| Validação | Zod (mesmos esquemas no navegador e no servidor) |
+| Testes | Vitest (unitários + integração com PostgreSQL real) e Playwright (E2E) |
+
+Detalhes: [docs/ARQUITETURA.md](docs/ARQUITETURA.md) · Publicação: [docs/DEPLOY.md](docs/DEPLOY.md) · Custos: [docs/CUSTOS.md](docs/CUSTOS.md) · Operação, backup e LGPD: [docs/OPERACAO.md](docs/OPERACAO.md)
+
+## Executar localmente
+
+Pré-requisitos: Node.js ≥ 20.9 e PostgreSQL ≥ 14 (com a extensão `btree_gist`, padrão no PostgreSQL).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local          # preencha DATABASE_URL e AUTH_SECRET
+npm run db:migrate                  # cria as tabelas e a restrição anti-conflito
+npm run admin:create                # cria o primeiro administrador (pergunta e-mail, nome e senha)
+npm run db:seed:demo                # OPCIONAL: serviços, horários e imagens DEMONSTRATIVAS
+npm run dev                         # http://localhost:3000  ·  painel em /admin
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sem tokens do Vercel Blob, em desenvolvimento as imagens são gravadas em `.data/uploads` (nunca em produção).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | O que faz |
+| --- | --- |
+| `npm run dev` / `build` / `start` | Desenvolvimento, build e servidor de produção |
+| `npm run lint` · `typecheck` | ESLint e TypeScript |
+| `npm test` | Testes unitários e de integração (usa `TEST_DATABASE_URL`, recriado a cada execução) |
+| `npm run test:e2e` | Playwright: sobe um build isolado contra `E2E_DATABASE_URL` |
+| `npm run check` | lint + typecheck + testes + build |
+| `npm run db:generate` | Gera nova migração a partir de `src/db/schema.ts` |
+| `npm run db:migrate` | Aplica migrações pendentes |
+| `npm run admin:create` | Cria administrador (interativo; ou `ADMIN_EMAIL`/`ADMIN_NAME`/`ADMIN_PASSWORD`) |
+| `npm run admin:reset-password` | Redefine a senha de um administrador e encerra as sessões dele |
+| `npm run db:seed:demo` | Dados demonstrativos (bloqueado em produção) |
 
-## Learn More
+## Primeiro administrador (seguro)
 
-To learn more about Next.js, take a look at the following resources:
+Não existe senha padrão nem cadastro público de administradores. O primeiro acesso é criado **pela linha de comando**, apontando para o banco desejado:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+DATABASE_URL="<url do banco de produção>" npm run admin:create
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+A senha precisa ter 12+ caracteres e três tipos de caractere; é guardada com scrypt. Para recuperar acesso: `npm run admin:reset-password` (requer acesso ao banco — a recuperação por e-mail depende do provedor de e-mail e não está implementada).
 
-## Deploy on Vercel
+## Estrutura
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/(site)/        páginas públicas          app/admin/       painel (login + (panel))
+  app/actions/       Server Actions públicas    app/admin/_actions/  Server Actions do painel
+  app/api/           disponibilidade, cron, referências privadas
+  components/        ui/ (primitivas), site/, booking/, forms/, admin/
+  config/            configurações editáveis + padrões (fonte única da marca)
+  db/                schema Drizzle e conexão
+  domain/            regras puras: disponibilidade e máquinas de status
+  lib/               fuso horário, validação, criptografia, utilitários
+  server/            serviços (agenda, orçamentos, portfólio, clientes, auth, notificações, armazenamento)
+drizzle/             migrações SQL versionadas
+tests/               unit/, integration/, e2e/
+```

@@ -325,7 +325,7 @@ async function GridView({
                           {formatTime(a.startsAt, tz)}–{formatTime(a.endsAt, tz)}
                         </span>
                         <span className="block truncate text-bone-dim">{a.clientName ?? "—"}</span>
-                        <span className="block truncate text-faint">
+                        <span className="block truncate text-mute">
                           {a.serviceName} · {APPOINTMENT_STATUS_SHORT[a.status]}
                         </span>
                       </Link>
